@@ -7,7 +7,7 @@ export const config = {
         TOKEN_SECRET: 'MyTokenSecret',
 
         // OAuth 2.0
-        GOOGLE_SECRET: 'REPLACE ME',
+        GOOGLE_SECRET: 'HltCKD32sM4gJ_TDkCLVeArS',
         FACEBOOK_SECRET: 'REPLACE ME',
         TWITTER_SECRET: 'REPLACE ME',
     }

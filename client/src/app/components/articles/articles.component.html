@@ -1,0 +1,51 @@
+<section id="dashboard-view" class="container-fluid">
+  <h3>Actualités</h3>
+  <h5 class="sub-title"> Toutes les news EDM/Festival/Artiste</h5>
+  <a ng-if="$root.isAdmin" class='btn btn-default' href="post/new" >
+    New
+  </a>
+
+  <div class="row" >
+    <div *ngFor="let post of articles | paginate: { itemsPerPage: 10, currentPage: p }"  class="col s12 ">
+
+        <div class="divImgNicely col s12 l3">
+          <a href="/posts/{{post._id}}" >
+            <div class="backImgNicely blur"  [ngStyle]="{'background-image': 'url(assets/images/articles/' + post.imgPost + ')'}" >
+            </div>
+            <div >
+              <img [src]="'assets/images/articles/'+post.imgPost"  class="img-responsive imgNicely" >
+            </div>
+          </a>
+        </div>
+
+
+        <div class="col s12 l9 valign-wrapper" >
+          <div class="col s12">
+            <div  class="col s12 center-align">
+              <h5 >{{post.title}}</h5>
+            </div>
+            <div class="row center-align">
+              <p  ng-bind-html="post.teaser"></p>
+            </div>
+            <div class="row center-align">
+              <div class="infoMusiqueArtiste ">
+                <p> Catégorie : <strong>{{post.category}}</strong>; Date : <strong>{{post.published_at | date:"dd/MM/yyyy"}}</strong>;
+                </p>
+              </div>
+            </div>
+          <div class="right-align">
+            <a href="posts/{{post._id}}">Lire Plus...</a>
+            <a class='btn btn-default' ng-if="$root.isAdmin" href="post/edit/{{post._id}}">Modifier</a>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="col s12">
+        <hr class="colorLazzer">
+      </div>
+
+    </div>
+    <pagination-controls (pageChange)="p = $event"></pagination-controls>
+  </div>
+</section>

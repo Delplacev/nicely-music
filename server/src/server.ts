@@ -3,12 +3,11 @@ import * as bodyParser from 'body-parser';
 import * as path from 'path';
 import * as jwtMiddleware from 'express-jwt';
 import {authRoutes} from './auth';
+import { musiqueRoutes } from './routes/musiques';
 import {config} from './config';
 import * as morgan from 'morgan';
 import * as cors from 'cors';
-/**
- * Created by Ron on 02/10/2016.
- */
+
 
 const app = express();
 const hostname = process.env.HOSTNAME || 'localhost';
@@ -20,12 +19,13 @@ const publicDir = process.argv[2] || path.join(__dirname, '..', '..', 'client', 
 app
     .use(
         //for ionic login
-        cors({ origin: 'http://localhost:8100' })
+        cors({ origin: 'http://localhost:4200' })
     )
     .use(morgan('dev'))
     .use(bodyParser.json())
     .use(express.static(publicDir))
     .use('/auth', authRoutes)
+    .use('/api/musiques', musiqueRoutes)
     .get('/secret', jwtMiddleware({
         secret: config.auth.TOKEN_SECRET
     }), (req, res) => res.send('4 8 15 16 23 42'))

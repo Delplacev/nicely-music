@@ -9,13 +9,16 @@ import { dbSaveUser, dbGetUser, dbUpdateUser, dbUserExists, dbGetUserByField } f
 import * as qs from 'querystring';
 import * as rp from 'request-promise';
 import * as bcrypt from 'bcrypt';
-/**
- * Created by Ron on 02/10/2016.
- */
+
+import { moment } from 'moment';
+import { jwt } from 'express-jwt';
+
+import { User } from './models/models'
 export const authRoutes = express.Router()
     .post('/login', login)
     .post('/signup', signup)
     .get('/refresh', refresh)
+    .get('/me', me)
     .use(jwtMiddleware({
         secret: config.auth.TOKEN_SECRET,
         credentialsRequired: false
@@ -24,15 +27,50 @@ export const authRoutes = express.Router()
     .post('/facebook', facebook)
     .post('/twitter', twitter);
 
+/*
+ |--------------------------------------------------------------------------
+ | Generate JSON Web Token
+ |--------------------------------------------------------------------------
+ */
+function createToken(user) {
+    var payload = {
+        sub: user._id,
+        iat: moment().unix(),
+        exp: moment().add(14, 'days').unix()
+    };
+    return jwt.encode(payload, config.auth.TOKEN_SECRET);
+}
+
+export async function me(request: RequestWithUser, response: Response) {
+    try {
+        const authorization = request.header("Authorization");
+        if (!authorization || !authorization.includes(' ')) {
+            return response.status(401).send('No Token');
+        }
+        const encodedToken = authorization.split(' ')[1];
+        const token: ITokenUser & { exp: number } =
+            await verifyTokenAsync(encodedToken, config.auth.TOKEN_SECRET, {ignoreExpiration: true});
+
+        return response.json(token._doc);
+    } catch (err) {
+        return response.sendStatus(500);
+    }
+/*    try {
+        const user = await User.findById(request.user).exec();
+        return user ;
+    } catch (err) {
+        return response.sendStatus(500);
+    }*/
+}
 
 export async function signup(request: Request, response: Response) {
     try {
         const user: IDBUser = <any>{};
         const signupData = await validateAsync(request.body, loginValidationSchema);
-        user.username = signupData.username;
+        user.email = signupData.email;
         user.hash = await bcrypt.hash(signupData.password, config.auth.SALT_ROUNDS);
         await dbSaveUser(user);
-        return await sendTokenAsync(response, { username: user.username });
+        return await sendTokenAsync(response, { email: user.email });
     } catch (err) {
         if (err instanceof Error) {
             if (isValidationError(err)) {
@@ -51,8 +89,10 @@ export async function signup(request: Request, response: Response) {
 
 
 export async function refresh(request: Request, response: Response) {
+
     try {
         const authorization = request.header("Authorization");
+        console.log(authorization)
         if (!authorization || !authorization.includes(' ')) {
             return response.status(401).send('No Token');
         }
@@ -100,6 +140,7 @@ export async function login(request: Request, response: Response) {
 }
 
 export async function google(req: RequestWithUser, res: Response) {
+
     const accessTokenUrl = 'https://www.googleapis.com/oauth2/v4/token';
     const peopleApiUrl = 'https://www.googleapis.com/plus/v1/people/me/openIdConnect';
     const { code } = req.body.oauthData;
@@ -120,36 +161,51 @@ export async function google(req: RequestWithUser, res: Response) {
         console.log(profile.error);
         throw profile.error;
     }
-    const userExists = await dbUserExists('google', profile.sub);
-    // Step 3a. Link user account.
-    if (req.user) {
-        if (userExists) {
-            return res.status(409).send('Google profile already linked');
-        }
-        const user = await dbUpdateUser(req.user.username, {
-            google: profile.sub,
-            picture: profile.picture.replace('sz=50', 'sz=200'),
-            displayName: req.user.displayName || profile.name
-        });
-        return await sendTokenAsync(res, toTokenUser(user));
+
+    const userExists = await dbUserExists('email', profile.email);
+    const userGoogleExists = await dbUserExists('google', profile.sub);
+
+/*    console.log(req.user)
+    if (userGoogleExists) {
+        return res.status(409).send('Google profile already linked');
     }
-    // Step 3b. Create a new user account
-    if (!userExists) {
-        const user = await dbSaveUser({
-            username: profile.email,
+
+    if(userExists && userGoogleExists){
+
+    } else {
+
+    }
+    */
+    if (userExists) {
+
+        const user = await dbUpdateUser(profile.email, {
             google: profile.sub,
             picture: profile.picture.replace('sz=50', 'sz=200'),
             displayName: profile.name
         });
         return await sendTokenAsync(res, toTokenUser(user));
     }
-    console.log(5);
-    // 3c. return an existing user
+
+    // Step 3b. Create a new user account
+    if (!userGoogleExists) {
+        const user = await dbSaveUser({
+            email: profile.email,
+            google: profile.sub,
+            picture: profile.picture.replace('sz=50', 'sz=200'),
+            displayName: profile.name
+        });
+        console.log(user)
+        return await sendTokenAsync(res, toTokenUser(user));
+    }
+
+
+
     const user = await dbGetUserByField('google', profile.sub);
+
+
     return await sendTokenAsync(res, toTokenUser(user));
+
 }
-
-
 
 export async function facebook(req: RequestWithUser, res: Response) {
     const fields = ['id', 'email', 'first_name', 'last_name', 'link', 'name', 'picture'];
@@ -184,6 +240,7 @@ export async function facebook(req: RequestWithUser, res: Response) {
     if (!userExists) {
         const user = await dbSaveUser({
             username: profile.name,
+            email: profile.email,
             facebook: profile.id,
             picture: profile.picture.data.url,
             displayName: profile.name

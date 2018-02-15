@@ -15,6 +15,18 @@
                  [formControl]="form.controls['username']"
           >
       </div>
+    <div class="form-group"
+         [ngClass]="{'has-error':fh.hasError(form, 'email')}"
+    >
+      <label for="email">Email:</label>
+      <div class="alert alert-danger" *ngIf="fh.hasError(form, 'email')">Wrong email</div>
+      <input type="text"
+             class="form-control"
+             id="email"
+             name="email"
+             [formControl]="form.controls['email']"
+      >
+    </div>
       <div [formGroup]="form.controls['password-group']">
           <div class="form-group"
                [ngClass]="{'has-error':fh.hasError(form, 'password-group')}"

@@ -32,9 +32,12 @@ export class LoginComponent implements OnInit {
     this.auth.login(loginData)
       .subscribe({
         error: (err: any) => alert(err.message),
-        complete: () => this.router.navigateByUrl('main')
+        complete: () => function () {
+          this.router.navigateByUrl('main');
+          window.location.reload();
+        }
       });
-  }
+   }
 
   loginWithGoogle() {
     this.auth.authenticate('google')

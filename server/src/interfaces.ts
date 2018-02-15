@@ -1,7 +1,3 @@
-/**
- * Created by Ron on 02/10/2016.
- */
-
 export interface IGoogleProfile {
     kind: "plus#personOpenIdConnect";
     gender: string;
@@ -48,7 +44,7 @@ export interface ISignupData extends ILoginData {
 }
 
 export interface ITokenUser {
-    username: string;
+    email: string;
     displayName?: string;
     picture?: string;
 }

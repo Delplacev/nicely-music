@@ -1,0 +1,206 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/theming';
+
+hr {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: 0;
+  border-top: 1px solid #eeeeee;
+}
+
+.colorLazzer {
+  color: #00e095;
+}
+html,body , .mat-sidenav-container{
+
+  height: 100%;
+}
+ .container {
+  min-height: 100%;
+}
+
+html {
+  zoom: 90%;
+}
+
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.blur {
+  -webkit-filter: blur(3px);
+  -moz-filter: blur(3px);
+  -ms-filter: blur(3px);
+  -o-filter: blur(3px);
+  filter: blur(3px);
+}
+
+mat-toolbar {
+  z-index: 999;
+  position: fixed;
+}
+mat-sidenav {
+  width: 300px;
+}
+
+mat-sidenav-content {
+  height: 100%;
+  position: relative;
+  width: 100%;
+  background: url("http://photo.rukes.com/revention/revention_052.jpg") 50% 50%;
+  background-attachment: fixed;
+}
+
+.logoNM {
+  height: 70%;
+}
+
+.container {
+  background-color: white;
+  padding: 70px 35px 10px 35px;
+}
+
+
+nav {
+  background-color: transparent;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0), 0 1px 5px 0 rgba(0, 0, 0, 0), 0 3px 1px -2px rgba(0, 0, 0, 0);
+}
+
+.nav-user {
+  font-size: 13px;
+
+  ul, li {
+    height: 100%;
+    margin: 0 10px;
+  }
+}
+
+/* Rules for sizing the icon. */
+.material-icons.md-14 { font-size: 14px; }
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+
+// define a real custom palette (using http://mcg.mbitson.com)
+$bv-brand: (
+  50: #ffffff,
+  100: #b3ffde,
+  200: #6fefc5,
+  300: #00e095,
+  400: #00d787,
+  500: #00cb7c,
+  600: #00cd7c,
+  700: #00b869,
+  800: #00b869,
+  900: #009f53,
+  A100: #ffffff,
+  A200: #dde6f3,
+  A400: #6cc185,
+  A700: #1bc16f,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: $black-87-opacity,
+    A200: $black-87-opacity,
+    A400: $black-87-opacity,
+    A700: white,
+  )
+);
+
+$bv-orange: (
+  50: #ffffff,
+  100: #dde6f3,
+  200: #b4c9e4,
+  300: #7fa3d1,
+  400: #6992c9,
+  500: #5282c1,
+  600: #4072b4,
+  700: #38649d,
+  800: #305687,
+  900: #284770,
+  A100: #ffffff,
+  A200: #dde6f3,
+  A400: #6992c9,
+  A700: #38649d,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: $black-87-opacity,
+    A200: $black-87-opacity,
+    A400: $black-87-opacity,
+    A700: white,
+  )
+);
+
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat-core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue.
+$candy-app-primary: mat-palette($bv-brand);
+$candy-app-accent:  mat-palette($bv-orange);
+
+// The warn palette is optional (defaults to red).
+$candy-app-warn:    mat-palette($mat-red);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent, $candy-app-warn);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($candy-app-theme);
+
+
+
+
+
+
+div.divImgNicely img.imgNicely {
+  z-index: 1;
+  max-height: 100%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+div.divImgNicely {
+  position: relative;
+  height: 150px;
+}
+
+.backImgNicely {
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-size: cover;
+}
+
+div.infoMusiqueArtiste {
+  font-size: 13px;
+}
+

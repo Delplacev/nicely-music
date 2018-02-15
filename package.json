@@ -27,5 +27,15 @@
   "homepage": "https://github.com/ronzeidman/ng2-ui-auth-example#readme",
   "devDependencies": {
     "concurrently": "^3.5.1"
+  },
+  "dependencies": {
+    "@angular/animations": "^5.2.4",
+    "@angular/cdk": "github:angular/cdk-builds",
+    "@angular/material": "github:angular/material2-builds",
+    "hammerjs": "^2.0.8",
+    "jwt-simple": "^0.5.1",
+    "mockgoose": "^7.3.5",
+    "moment": "^2.20.1",
+    "ngx-pagination": "^3.0.3"
   }
 }

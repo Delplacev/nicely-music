@@ -6,19 +6,20 @@ import { VerifyOptions } from 'jsonwebtoken';
 
 import { config } from './config';
 import { IDBUser, ITokenUser } from './interfaces';
+import {IUser, User} from './models/users/model';
 
 /**
  * Created by Ron on 03/10/2016.
  */
 
-export const toTokenUser = (user: IDBUser) => {
+export const toTokenUser = (user: IUser) => {
     const tokenUser: ITokenUser = Object.assign({}, user);
     delete (<any>tokenUser).hash;
     return tokenUser;
 };
 
 /* express */
-export type RequestWithUser = Request & { user: IDBUser };
+export type RequestWithUser = Request & { user: IUser };
 
 /* jsonwebtoken */
 export const sendTokenAsync = (response: Response, tokenInfo: ITokenUser) => {
@@ -62,5 +63,6 @@ export const validateAsync = <T>(value: T, schema: Object, options?: ValidationO
 export const isValidationError = (err: Error): err is ValidationError => err.name === 'ValidationError';
 export const loginValidationSchema = {
     username: joi.string().max(20).min(3).required(),
+    email:    joi.string().max(20).min(3).required(),
     password: joi.string().max(50).min(6).required()
 };

@@ -1,0 +1,81 @@
+<section id="dashboard-view" class="container-fluid">
+  <h4>Musique</h4>
+  <h6 class="sub-title">Retrouvé ici la liste de toutes les musiques</h6>
+
+  <div class="row" >
+    <div *ngFor="let musique of musiques | paginate: { itemsPerPage: 10, currentPage: p }"  class="col s12 musique ">
+
+
+        <div class="divImgNicely col s12 l3">
+
+          <div class="backImgNicely blur"  [ngStyle]="{'background-image': 'url(' + musique.img_spotify + ')'}" ></div>
+          <div >
+            <img [src]="musique.img_spotify" onerror="this.src='images/180x180/LOGO-NICELY-MUSIC-V2.png'" class="img-responsive imgNicely" >
+          </div>
+        </div>
+        <div class="col s12 l9 valign-wrapper" >
+
+          <div  class="col s12">
+            <div class="col s12 center-align" >
+              <span  *ngFor="let listeartiste of musique.artiste; let i=index "  >
+                  <span *ngIf="musique.artiste.length -1 != i"><a  href="artiste/{{listeartiste._id}}" class="text-uppercase linkEffectBlock"  >{{listeartiste.nomArtiste }} </a> & </span>
+                  <span *ngIf="musique.artiste.length -1 == i" ><a  href="artiste/{{listeartiste._id}}" class="text-uppercase linkEffectBlock"  >{{listeartiste.nomArtiste }}</a> </span>
+                </span>
+
+                <span  *ngIf="musique.artisteFeat.length !== 0">
+                  ft. <span *ngFor="let listeartisteFeat of musique.artisteFeat; let i=index " >
+                    <span *ngIf="musique.artisteFeat.length -1 != i"><a  href="artiste/{{listeartisteFeat._id}}" class="text-uppercase linkEffectBlock"  >{{listeartisteFeat.nomArtiste}} </a> & </span>
+                    <span *ngIf="musique.artisteFeat.length -1 == i" ><a  href="artiste/{{listeartisteFeat._id}}" class="text-uppercase linkEffectBlock"   >{{listeartisteFeat.nomArtiste}}</a> </span>
+                  </span>
+                </span>
+                - {{musique.titreMusique}}
+                <span  *ngIf="musique.artisteRemix.length !== 0">
+                  (<span  *ngFor=" let listeartisteRemix of musique.artisteRemix; let i=index " >
+                    <span *ngIf="musique.artisteRemix.length -1 != i"><a  href="artiste/{{listeartisteRemix._id}}" class="text-uppercase linkEffectBlock" >{{listeartisteRemix.nomArtiste}}</a> & </span>
+                    <span *ngIf="musique.artisteRemix.length -1 == i" ><a  href="artiste/{{listeartisteRemix._id}}" class="text-uppercase linkEffectBlock"  >{{listeartisteRemix.nomArtiste}}</a> </span>
+                  </span>   Remix )
+              </span>
+
+            </div>
+
+            <div class="row" >
+              <div  class="col s12">
+                <div class="infoMusiqueArtiste center-align">
+                  <p> Date releases : <strong>{{musique.dateRelease | date:"dd/MM/yyyy"}}</strong>; Style : <span *ngFor="let style of musique.styles" ><a class="colorLazzer" href="style/{{style._id}}">{{style.nomStyle}} </a></span>;
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="row" >
+              <div class="center-align col s12">
+                <button mat-button class="md-primary md-raised" (click)="$root.showPromptAddMusique($event,musique._id)"  [disabled]="!isAuthenticated()"  >
+                  <h6 class="titrePostH3 center-align "><span class="linkEffectBlock">Ajouter à une playlist <i class="material-icons">playlist_add</i></span></h6>
+                </button>
+                <button mat-button class="md-primary md-raised" (click)="addMusiquePlaylist(musique._id)"  >
+                  <h6 class="titrePostH3 center-align"><span class="linkEffectBlock">Ajouter à la playlist en cours <i class="material-icons">queue_play_next</i></span></h6>
+                </button><br>
+                <span ng-if="!isAuthenticated()" >Connectez-vous pour utiliser cette fonctionnalités</span>
+              </div >
+              <div class="col s3 push-s9 text-center" [attr.disabled]="!isAuthenticated()" >
+                <div class="col s6" (click)="upVote(musique);"><span><i class="material-icons md-14">thumb_up</i>{{musique.upvotes.length}} </span></div>
+                <div class="col s6" (click)="downVote(musique);"><span><i class="material-icons md-14">thumb_down</i>{{musique.downvotes.length}} </span></div>
+              </div>
+            </div>
+
+
+
+        </div>
+      </div>
+
+      <div class="col s12">
+        <hr class="colorLazzer">
+      </div>
+
+
+    </div>
+    <pagination-controls (pageChange)="p = $event"></pagination-controls>
+  </div>
+
+</section>
+

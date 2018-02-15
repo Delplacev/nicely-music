@@ -21,6 +21,7 @@ export class SignupComponent implements OnInit {
   ngOnInit() {
     this.form = this.fb.group({
       'username': new FormControl('', [Validators.required, Validators.minLength(3)]),
+      'email': new FormControl('', [Validators.required, Validators.minLength(3)]),
       'password-group': new FormGroup(
         {
           'password': new FormControl('', [Validators.required, Validators.minLength(6)]),
@@ -37,6 +38,7 @@ export class SignupComponent implements OnInit {
   signup(signupData: any) {
     this.auth.signup({
       username: signupData['username'],
+      email: signupData['email'],
       password: signupData['password-group']['password']
     })
       .subscribe({

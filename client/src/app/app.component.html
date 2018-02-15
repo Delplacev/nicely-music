@@ -1,2 +1,47 @@
-<router-outlet></router-outlet>
+<mat-sidenav-container >
+  <mat-toolbar color="primary" class="example-toolbar" autosize>
+    <button mat-icon-button (click)="sidenav.toggle()"><mat-icon>menu</mat-icon></button>
+    <img src='assets/images/NM-FINAL-500x500.png' class='logoNM' />
+    <h1 class="example-app-name">Nicely Music</h1>
+    <nav>
+      <div class="nav-wrapper nav-user">
+        <ul class="right" *ngIf="!isAuth()">
+          <li><a href="/login">Connexion</a></li>
+          <li><a href="/signup">Inscription</a></li>
+        </ul>
+        <ul class="right" *ngIf="isAuth()">
+          <li>Bienvenue {{user_temp.displayName}}</li>
+          <li class="valign-wrapper"><img [src]="user_temp.picture" class='logoNM' /></li>
+          <li (click)="logout()" ><a >Deconnexion</a></li>
+        </ul>
+      </div>
+    </nav>
+  </mat-toolbar>
+
+  <mat-sidenav #sidenav opened="false" class="example-sidenav" mode='over' [fixedInViewport]="true">
+    <mat-nav-list>
+      <mat-list-item >
+        <a matLine href="/musiques">Musiques</a>
+        <button mat-icon-button >
+          <mat-icon>headset</mat-icon>
+        </button>
+      </mat-list-item>
+      <mat-list-item >
+        <a matLine href="/articles">Articles</a>
+        <button mat-icon-button >
+          <mat-icon>art_track</mat-icon>
+        </button>
+      </mat-list-item>
+    </mat-nav-list>
+
+
+  </mat-sidenav>
+
+  <div class="container">
+    <router-outlet  ></router-outlet>
+  </div>
+
+  <alert></alert>
+</mat-sidenav-container>
+
 
