@@ -61,8 +61,12 @@ export const validateAsync = <T>(value: T, schema: Object, options?: ValidationO
 
 
 export const isValidationError = (err: Error): err is ValidationError => err.name === 'ValidationError';
+export const signinValidationSchema = {
+    displayName:    joi.string().max(100).min(3).required(),
+    email:    joi.string().max(100).min(3).required(),
+    password: joi.string().max(50).min(6).required()
+};
 export const loginValidationSchema = {
-    username: joi.string().max(20).min(3).required(),
-    email:    joi.string().max(20).min(3).required(),
+    email:    joi.string().max(100).min(3).required(),
     password: joi.string().max(50).min(6).required()
 };

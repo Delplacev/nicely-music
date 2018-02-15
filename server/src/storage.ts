@@ -11,16 +11,10 @@ export const dbSaveUser = async (user: Partial<IUser>) => {
     return await user_new.save()
 };
 
-export const dbGetUser = async (email: string) => {
-    User.findOne({email: email}).exec(function (err, result) {
-        if(result) {
-            return result;
-        }
+export const dbGetUser = async (email_value: string) => {
 
-        throw new Error('Account not exist');
-
-    });
-};
+    return await User.findOne({email: email_value}).exec()
+}
 
 export const dbUpdateUser = async (email: string, userUpdate: Partial<IUser>) => {
 /*    const existingUser = await dbGetUser(username);

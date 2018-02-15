@@ -4,15 +4,15 @@
   </div>
   <form class="col-lg-12" [formGroup]="form" (ngSubmit)="signup(form.value)">
       <div class="form-group"
-           [ngClass]="{'has-error':fh.hasError(form, 'username')}"
+           [ngClass]="{'has-error':fh.hasError(form, 'displayName')}"
       >
-          <label for="username">Username:</label>
-          <div class="alert alert-danger" *ngIf="fh.hasError(form, 'username')">Username must be at least 3 characters long.</div>
+          <label for="displayName">Nom Complet:</label>
+          <div class="alert alert-danger" *ngIf="fh.hasError(form, 'displayName')">displayName must be at least 3 characters long.</div>
           <input type="text"
                  class="form-control"
-                 id="username"
-                 name="username"
-                 [formControl]="form.controls['username']"
+                 id="displayName"
+                 name="displayName"
+                 [formControl]="form.controls['displayName']"
           >
       </div>
     <div class="form-group"

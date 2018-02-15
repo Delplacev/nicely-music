@@ -45,7 +45,7 @@ export interface ISignupData extends ILoginData {
 
 export interface ITokenUser {
     email: string;
-    displayName?: string;
+    displayName: string;
     picture?: string;
 }
 

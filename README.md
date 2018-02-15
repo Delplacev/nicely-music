@@ -1,8 +1,8 @@
 # Nicely music MEAN APP
 
-#####server : Typescript
-#####Front : Angular 5 (with angulat material + materializecss)
-#####Data :  Mongodb (mongoose)
+####server : Typescript
+####Front : Angular 5 (with angulat material + materializecss)
+####Data :  Mongodb (mongoose)
 
 
 

@@ -2,7 +2,7 @@ import { Router } from '@angular/router';
 import { AuthService } from 'ng2-ui-auth';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
-import { FormHelperService } from "../../services/form-helper.service";
+import { FormHelperService } from '../../services/form-helper.service';
 
 @Component({
   selector: 'app-signup',
@@ -20,7 +20,7 @@ export class SignupComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.fb.group({
-      'username': new FormControl('', [Validators.required, Validators.minLength(3)]),
+      'displayName': new FormControl('', [Validators.required, Validators.minLength(3)]),
       'email': new FormControl('', [Validators.required, Validators.minLength(3)]),
       'password-group': new FormGroup(
         {
@@ -37,7 +37,7 @@ export class SignupComponent implements OnInit {
 
   signup(signupData: any) {
     this.auth.signup({
-      username: signupData['username'],
+      displayName: signupData['displayName'],
       email: signupData['email'],
       password: signupData['password-group']['password']
     })

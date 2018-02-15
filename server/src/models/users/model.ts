@@ -6,7 +6,7 @@ export interface IUser extends Document, ITokenUser {
     email: string;
     firstName?: string;
     lastName?: string;
-    displayName?: string;
+    displayName: string;
     role?: string;
     picture?: string;
     bitbucket?: string;

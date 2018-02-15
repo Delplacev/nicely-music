@@ -11,7 +11,7 @@
         </ul>
         <ul class="right" *ngIf="isAuth()">
           <li>Bienvenue {{user_temp.displayName}}</li>
-          <li class="valign-wrapper"><img [src]="user_temp.picture" class='logoNM' /></li>
+          <li class="valign-wrapper"><img [src]="user_temp.picture" class='logoNM' onError="this.src='assets/images/NM-FINAL-500x500.png'" /></li>
           <li (click)="logout()" ><a >Deconnexion</a></li>
         </ul>
       </div>

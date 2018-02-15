@@ -2,7 +2,10 @@ import * as express from 'express';
 import { Request, Response } from 'express';
 import * as jwtMiddleware from 'express-jwt';
 import { JsonWebTokenError } from 'jsonwebtoken';
-import { validateAsync, loginValidationSchema, isValidationError, toTokenUser, RequestWithUser, sendTokenAsync, verifyTokenAsync } from './helpers';
+import {
+    validateAsync, loginValidationSchema, isValidationError, toTokenUser, RequestWithUser, sendTokenAsync, verifyTokenAsync,
+    signinValidationSchema
+} from './helpers';
 import { config } from './config';
 import { IDBUser, IFacebookProfile, IGoogleProfile, ILoginData, ITokenUser, ITwitterProfile } from './interfaces';
 import { dbSaveUser, dbGetUser, dbUpdateUser, dbUserExists, dbGetUserByField } from './storage';
@@ -14,6 +17,7 @@ import { moment } from 'moment';
 import { jwt } from 'express-jwt';
 
 import { User } from './models/models'
+import {IUser} from './models/users/model';
 export const authRoutes = express.Router()
     .post('/login', login)
     .post('/signup', signup)
@@ -41,6 +45,7 @@ function createToken(user) {
     return jwt.encode(payload, config.auth.TOKEN_SECRET);
 }
 
+
 export async function me(request: RequestWithUser, response: Response) {
     try {
         const authorization = request.header("Authorization");
@@ -50,27 +55,24 @@ export async function me(request: RequestWithUser, response: Response) {
         const encodedToken = authorization.split(' ')[1];
         const token: ITokenUser & { exp: number } =
             await verifyTokenAsync(encodedToken, config.auth.TOKEN_SECRET, {ignoreExpiration: true});
-
+        console.log(token)
         return response.json(token._doc);
     } catch (err) {
         return response.sendStatus(500);
     }
-/*    try {
-        const user = await User.findById(request.user).exec();
-        return user ;
-    } catch (err) {
-        return response.sendStatus(500);
-    }*/
 }
 
 export async function signup(request: Request, response: Response) {
     try {
-        const user: IDBUser = <any>{};
-        const signupData = await validateAsync(request.body, loginValidationSchema);
+        const user: IUser = <any>{};
+
+        const signupData = await validateAsync(request.body, signinValidationSchema);
+        console.log(signupData);
+        user.displayName = signupData.displayName;
         user.email = signupData.email;
         user.hash = await bcrypt.hash(signupData.password, config.auth.SALT_ROUNDS);
         await dbSaveUser(user);
-        return await sendTokenAsync(response, { email: user.email });
+        return await sendTokenAsync(response, {email: user.email, displayName: user.displayName });
     } catch (err) {
         if (err instanceof Error) {
             if (isValidationError(err)) {
@@ -118,14 +120,14 @@ export async function refresh(request: Request, response: Response) {
 
 export async function login(request: Request, response: Response) {
     try {
-        const login: ILoginData = await validateAsync(request.body, loginValidationSchema);
-        const user = await dbGetUser(login.username);
+        const login: IUser = await validateAsync(request.body, loginValidationSchema);
+        const user = await dbGetUser(login.email);
         if (!user || !user.hash) { //user does not have a password, only google account
-            return response.status(401).send('Bad username or password');
+            return response.status(401).send('Bad email or password');
         }
         const passwordMatch = await bcrypt.compare(login.password, user.hash);
         if (!passwordMatch) {
-            return response.status(401).send('Bad username or password');
+            return response.status(401).send('Bad email or password');
         }
         return await sendTokenAsync(response, toTokenUser(user));
     } catch (err) {

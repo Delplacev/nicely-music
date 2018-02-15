@@ -23,12 +23,16 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.fb.group({
-      username: new FormControl('', [Validators.required, Validators.minLength(3)]),
+      email: new FormControl('', [Validators.required, Validators.minLength(3)]),
       password: new FormControl('', [Validators.required, Validators.minLength(6)]),
     });
+
+    if (this.auth.isAuthenticated()) {
+      this.router.navigateByUrl('musiques');
+    }
   }
 
-  login(loginData: { username: string, password: string }) {
+  login(loginData: { email: string, password: string }) {
     this.auth.login(loginData)
       .subscribe({
         error: (err: any) => alert(err.message),
@@ -43,7 +47,7 @@ export class LoginComponent implements OnInit {
     this.auth.authenticate('google')
       .subscribe({
         error: (err: any) => alert(err.message),
-        complete: () => this.router.navigateByUrl('main')
+        complete: () => location.reload(true)
       });
   }
 }

@@ -17,13 +17,16 @@ export class AppComponent {
   constructor(
     private auth: AuthService,
     private user: UsersService,
-    private location: Location
+    private location: Location,
+    private router: Router
   ) {
-    if(this.isAuth()) {
+
+    if (this.auth.getPayload()._doc === undefined) {
+      this.user_temp = this.auth.getPayload();
+    } else {
       this.user_temp = this.auth.getPayload()._doc;
     }
   }
-
 
   getProfile(): void {
     this.user.getProfile()
@@ -41,7 +44,7 @@ export class AppComponent {
     this.auth.logout()
       .subscribe({
         error: (err: any) => alert(err.message),
-        complete: () =>  location.reload()
+        complete: () =>  location.reload(true)
 
       });
 
